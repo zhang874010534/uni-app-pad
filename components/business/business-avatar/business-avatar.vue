@@ -1,0 +1,6 @@
+<template>
+	<view>
+		😊
+	</view>
+</template>
+

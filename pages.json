@@ -1,0 +1,72 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				"app-plus": {
+					"titleNView": false,
+					"subNVues": [{
+						"id": "personalPopup",
+						"type": "popup",
+						"path": "pages/index/subnvue/personalPopup", // 页面路径
+						"style": {
+							"position": "absolute",
+							"margin": "auto",
+							"width": "300px",
+							"height": "100%",
+							"left": 0,
+							"mask": "rgba(255, 255, 255)"
+						}
+					}]
+				}
+			}
+		},
+		{
+			"path": "pages/login/chooseWard",
+			"style": {
+				"navigationBarTitleText": "选择123"
+			}
+		},
+
+		{
+			"path": "pages/login/login",
+			"style": {
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		}
+	],
+
+	// "tabBar": {
+	// 	"fontSize": "20px",
+	// 	"borderStyle": "white",
+	// 	"list": [{
+	// 		"pagePath": "pages/index/index",
+	// 		"text": "首页",
+	// 		"visible": false
+	// 	}, {
+	// 		"pagePath": "pages/login/login",
+	// 		"text": "登录",
+	// 		"visible": false
+	// 	}]
+	// },
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8",
+		"rpxCalcMaxDeviceWidth": 9999,
+		"rpxCalcBaseDeviceWidth": 375,
+		"rpxCalcIncludeWidth": 750,
+		"pageOrientation": "auto"
+	},
+	"easycom": {
+		"autoscan": true,
+		"custom": {
+			"business-(.*)": "@/components/business/business-$1/business-$1.vue",
+			"control-(.*)": "@/components/control/control-$1/control-$1.vue"
+		}
+	},
+	"uniIdRouter": {}
+}

@@ -1,0 +1,169 @@
+<template>
+	<view class="popup-wrapper"
+		:style="`padding-top:${systemInfo.statusBarHeight}px;height:${systemInfo.screenHeight}px`">
+		<view class="avatar-wrapper">
+			<view class="avatar-left">
+				<image :src="userInfo.picName ? baseUrl + userInfo.picName : defaultAvatar" mode="widthFix" class="avatar"></image>
+			</view>
+			<view class="avatar-right">
+				<view class="name">
+					{{userInfo.staffName}}
+				</view>
+			</view>
+		</view>
+		<view class="operation-wrapper">
+			<view class="operation-item" v-for="item in operationList" @click="clickOperate(item)">
+				<image :src="item.url" mode="widthFix" class="icon"></image>
+				<view class="text">
+					{{item.name}}
+				</view>
+			</view>
+		</view>
+		<view class="bottom-wrapper">
+			<view class="center-button" @click="logOut">
+				退出登录
+			</view>
+			<text class="current-version">
+				当前版本: {{systemInfo.appWgtVersion}}
+			</text>
+		</view>
+	</view>
+</template>
+<script setup>
+	import defaultWardIcon from '../images/i-defaultWard.png'
+	import defaultAvatar from '../images/default-avatar.png'
+	import {
+		onShow,
+	} from '@dcloudio/uni-app'
+	import {
+		ref,
+		onMounted,
+		onUnmounted,
+	} from "vue";
+	import {
+		baseUrl,
+		common
+	} from '@/utils/common';
+	import {
+		useUserStore
+	} from '../../../stores/user';
+	const systemInfo = ref({})
+	
+	const operationList = ref([{
+		url: defaultWardIcon,
+		id: 'changeWard',
+		name: '切换科室',
+	}])
+	const userStore = useUserStore()
+	const userInfo = userStore.userInfo
+	
+	const getSystemInfo = () => {
+		uni.getSystemInfo().then(res => {
+			systemInfo.value = res
+		})
+	}
+	getSystemInfo()
+	
+	const windowResizeCallback = (res) => {
+		getSystemInfo()
+	}
+	onMounted(() => {
+		getSystemInfo()
+		uni.onWindowResize(windowResizeCallback)
+	})
+	onUnmounted(() => {
+		uni.offWindowResize(windowResizeCallback)
+	})
+	onShow(() => {
+		const findItem = operationList.value.find(item => item.id === 'changeWard')
+		findItem.name = userStore.currentWard.wardName
+	})
+	const clickOperate = (row) => {
+		const subNVue = uni.getCurrentSubNVue();
+		subNVue.hide('slide-out-left')
+		// 切换科室
+		if (row.id === 'changeWard') {
+			uni.navigateTo({
+				url: '/pages/login/chooseWard'
+			})
+		}
+	}
+
+	const logOut = () => {
+		plus.storage.clear()
+		uni.reLaunch({
+			url: '/pages/login/login'
+		})
+	}
+</script>
+<style lang="scss" scoped>
+	.popup-wrapper {
+		padding: 0 16px;
+		background-color: #F0F2F5;
+	}
+	
+	.avatar-wrapper {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		padding-top: 16px;
+		.avatar {
+			width: 60px;
+		}
+		.avatar-right {
+			margin-left: 8px;
+			.name {
+				font-weight: bold;
+			}
+		}
+	}
+	.operation-wrapper {
+		margin-top: 16px;
+		flex: 1;
+		.operation-item {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			padding: 12px 16px;
+			border-radius: 8px;
+			background-color: #fff;
+
+			&:active {
+				background-color: #EEEEEE;
+			}
+
+			.icon {
+				width: 18px;
+			}
+
+			.text {
+				margin-left: 8px;
+			}
+		}
+	}
+
+	.bottom-wrapper {
+		margin-top: 16px;
+
+		.current-version {
+			text-align: center;
+			height: 60px;
+			line-height: 60px;
+			font-size: 12px;
+			color: #939496;
+		}
+	}
+
+	.center-button {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		padding: 12px 8px;
+		border-radius: 8px;
+		background-color: #fff;
+
+		&:active {
+			background-color: #EEEEEE;
+		}
+	}
+</style>
